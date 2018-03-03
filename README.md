@@ -1,4 +1,4 @@
-Point & Click adventure game prototyping toolkit.
+# Point & Click adventure game prototyping toolkit.
 
 ## Usage
 
@@ -175,6 +175,19 @@ Remember to inform your users about cookies and stuff if you do that.
 ### Skinning
 
 If you are making a prototype, perhaps this is the least important thing to consider. However, since you define the game with HTML tags, you can use CSS to change how they look and feel. The toolkit provides default CSS that just works. Feel free to override it with your own rules.
+
+## Using the examples
+
+First you need to build the javascript library, with the following commands:
+
+```sh
+npm install
+npm run build
+```
+
+The first command will install all the required dependencies, and the second one builds the javascript library.
+
+And now you can open the `index.html` file of any of the examples directly in your browser.
 
 ## Feature requests / PRs
 
