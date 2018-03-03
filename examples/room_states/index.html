@@ -1,0 +1,36 @@
+<html>
+
+<head>
+  <title>Room states example</title>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    // Change this to true to enable the debug mode.
+    window.DEBUG = false;
+  </script>
+  <script src="prototype.js"></script>
+</head>
+
+<body>
+  <game first-room="start:white">
+
+    <room id="start:white">
+      <img src="intro.png"></img>
+      <region coords="80,431,301,519" goto-room="start:blue" tooltip="Changes the state of this room"></region>
+      <region coords="678,430,848,519" goto-room="finished" tooltip="Moves to another room"></region>
+    </room>
+
+    <room id="start:blue">
+      <img src="intro-blue.png"></img>
+      <region coords="80,431,320,521" goto-room="start:white" tooltip="Changes the state of this room"></region>
+      <region coords="678,430,848,519" goto-room="finished" tooltip="Moves to another room"></region>
+    </room>
+
+    <room id="finished">
+      <img src="finished.png"></img>
+      <region coords="386,428,636,521" goto-room="start" tooltip="Go back to the first room"></region>
+    </room>
+
+  </game>
+</body>
+
+</html>

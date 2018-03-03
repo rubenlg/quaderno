@@ -1,0 +1,30 @@
+<html>
+
+<head>
+  <title>Custom dimensions example</title>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    // Change this to true to enable the debug mode.
+    window.DEBUG = false;
+  </script>
+  <script src="prototype.js"></script>
+</head>
+
+<body>
+  <game first-room="start" width="640" height="360">
+
+    <room id="start">
+      <img src="intro.png"></img>
+      <region coords="194,238,444,331" goto-room="finished" tooltip="Yes, here!"></region>
+    </room>
+
+    <room id="finished">
+      <!-- This image is smaller than 640x360, but it will be stretched to use
+        the full dimensions -->
+      <img src="finished.png"></img>
+    </room>
+
+  </game>
+</body>
+
+</html>

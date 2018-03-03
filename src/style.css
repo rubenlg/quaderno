@@ -1,0 +1,232 @@
+* {
+  font-family: arial, helvetica, sans-serif;
+}
+
+game {
+  width: 1024px;
+  height: 576px;
+  display: block;
+  margin: auto;
+  position: relative;
+  max-width: 100%;
+  border: 1px solid rgba(0,0,0,0.5);
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* Internet Explorer/Edge */
+  user-select: none;
+}
+
+room {
+  display: none;
+}
+
+room.enabled {
+  display: block;
+}
+
+/* Stretch smaller images to use the full dimensions */
+room > img {
+  width: 100%;
+  height: 100%;
+}
+
+region {
+  position: absolute;
+  display: block;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.debug region {
+  border: 1px solid red;
+}
+
+region.inventory-drag {
+  border: 1px solid white;
+}
+
+region give {
+  display: none;
+}
+
+conv {
+  display: none;
+  position: absolute;
+  left: 0px;
+  bottom: 0px;
+  width: 1024px;
+  height: 128px;
+  color: white;
+  font-weight: 600;
+  list-style-type: none;
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 0 20px;
+  margin: 0;
+  box-sizing: border-box;
+  z-index: 1;
+}
+
+conv.enabled {
+  display: block;
+}
+
+conv li {
+  margin-top: 10px;
+  padding: 5px;
+  background-color: rgba(128, 128, 128, 0.7);
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+conv a {
+  color: white;
+  text-decoration: none;
+}
+
+prompt {
+  position: absolute;
+  font-weight: 600;
+  color: black;
+  display: block;
+  background-color: white;
+  padding: 5px 10px;
+  border-radius: 15px 15px 15px 0;
+  border: 1px solid rgba(0,0,0,0.25);
+}
+
+prompt.rtl {
+  border-radius: 15px 15px 0 15px;
+}
+
+player-prompt {
+  display: none;
+  position: absolute;
+  left: 0px;
+  bottom: 0px;
+  width: 1024px;
+  height: 128px;
+  color: white;
+  font-weight: 600;
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 20px;
+  margin: 0;
+  box-sizing: border-box;
+  z-index: 1;
+}
+
+player-prompt.visible {
+  display: block;
+}
+
+inventory {
+  display: block;
+  position: absolute;
+  left: 0px;
+  bottom: 0px;
+  width: 1024px;
+  height: 128px;
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+inventory img {
+  display: none;
+  position: relative;
+  opacity: 0.7;
+  border: 1px solid rgba(255, 255, 255, 0.0);
+  border-radius: 5px;
+}
+
+inventory img.enabled {
+  display: inline-block;
+}
+
+inventory img:hover {
+  opacity: 1.0;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+inventory img+img {
+  margin: 0 9px;
+}
+
+conv,
+inventory {
+  background: linear-gradient(
+    to bottom, rgba(0,0,0,0.5), rgba(0,0,0,1.0)
+  );
+}
+
+[tooltip]:hover::after {
+  content: attr(tooltip);
+  padding: 4px 8px;
+  color: white;
+  text-shadow: 2px 2px black;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  z-index: 2;
+  white-space: nowrap;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+handle {
+  display: block;
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: red;
+}
+
+handle:hover {
+  background-color: yellow;
+}
+
+handle.top-left {
+  top: -8px;
+  left: -8px;
+  cursor: move;
+}
+
+handle.top-right {
+  top: -8px;
+  right: -8px;
+}
+
+handle.bottom-left {
+  bottom: -8px;
+  left: -8px;
+}
+
+handle.bottom-right {
+  bottom: -8px;
+  right: -8px;
+  cursor: se-resize;
+}
+
+#_debug_console {
+  width: 100%;
+  height: 200px;
+  overflow-y: scroll;
+  background-color: darkslategray;
+}
+
+#_debug_console div {
+  font-family: monospace;
+  color: gainsboro;
+}
+
+#_debug_console div.WARNING {
+  color: orange;
+}
+
+#_debug_console div.ERROR {
+  color: #ff5757;
+}

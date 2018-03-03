@@ -1,0 +1,28 @@
+<html>
+
+<head>
+  <title>Hello world example</title>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    // Change this to true to enable the debug mode.
+    window.DEBUG = false;
+  </script>
+  <script src="prototype.js"></script>
+</head>
+
+<body>
+  <game first-room="start">
+
+    <room id="start">
+      <img src="intro.png"></img>
+      <region coords="386,428,636,521" goto-room="finished" tooltip="Yes, here!"></region>
+    </room>
+
+    <room id="finished">
+      <img src="finished.png"></img>
+    </room>
+
+  </game>
+</body>
+
+</html>

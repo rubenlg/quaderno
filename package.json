@@ -1,0 +1,27 @@
+{
+  "name": "quaderno",
+  "version": "0.1.0",
+  "description": "Adventure game prototyping toolkit",
+  "main": "prototype.ts",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "karma start karma.conf.js",
+    "build": "browserify src/prototype.ts -p tsify -o jsbin/prototype.js"
+  },
+  "author": "Rubén López",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jasmine": "^2.8.6",
+    "browserify": "^16.1.0",
+    "jasmine-core": "^3.1.0",
+    "jasmine-ts": "^0.2.1",
+    "karma": "^2.0.0",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-jasmine": "^1.1.1",
+    "karma-typescript": "^3.0.12",
+    "tsify": "^3.0.4",
+    "typescript": "^2.7.2"
+  }
+}

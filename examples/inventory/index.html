@@ -1,0 +1,37 @@
+<html>
+
+<head>
+  <title>Inventory example</title>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    // Change this to true to enable the debug mode.
+    window.DEBUG = false;
+  </script>
+  <script src="prototype.js"></script>
+</head>
+
+<body>
+  <game first-room="start">
+
+    <room id="start">
+      <img src="intro.png"></img>
+      <region coords="115,144,339,339" tooltip="Drag here a star!">
+        <give id="star" inventory-add="circle"></give>
+      </region>
+      <region coords="676,143,900,338" tooltip="Drag here a circle!">
+          <give id="circle" goto-room="finished"></give>
+      </region>
+    </room>
+
+    <room id="finished">
+      <img src="finished.png"></img>
+    </room>
+
+    <inventory initial-contents="star">
+      <img src="star.png" id="star" tooltip="A star" />
+      <img src="circle.png" id="circle" tooltip="A circle" />
+    </inventory>
+  </game>
+</body>
+
+</html>

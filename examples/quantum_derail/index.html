@@ -1,0 +1,878 @@
+<html>
+
+<head>
+  <title>Prototype of Quantum Derail</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .finalized-game {
+      position: absolute;
+      top: 400px;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      vertical-align: center;
+    }
+  </style>
+  <script>
+    // Change this to true to enable the debug mode.
+    window.DEBUG = false;
+  </script>
+  <script src="prototype.js"></script>
+</head>
+
+<body>
+  <game first-room="start">
+
+    <room id="start">
+      <img src="intro.jpg"></img>
+      <conv-group id="boss">
+        <prompt style="left: 520; bottom: 390"></prompt>
+        <conv id="main" default prompt="Ready to know your next assignment?">
+          <li next-conv="next-assignment">Sure, go ahead.</li>
+          <li next-conv="vacation">I think I need some vacation.</li>
+        </conv>
+        <conv id="next-assignment" prompt="You are going to like it">
+          <li next-conv="drama">Why so much drama?</li>
+          <li next-conv="next-assignment-2">What is it??</li>
+        </conv>
+        <conv id="drama" prompt="It is your favorite topic">
+          <li next-conv="next-assignment-2">What is it??</li>
+          <li next-conv="vacation">Vacation?</li>
+        </conv>
+        <conv id="next-assignment-2" prompt="Someone stole the prototype of the first quantum locomotive">
+          <li next-conv="next-assignment-3">Yes!!! I mean, that's terrible news...</li>
+          <li next-conv="next-assignment-3">If it has quantum in the name, I'm all in.</li>
+        </conv>
+        <conv id="next-assignment-3" prompt="Quantum Steam reported it last night">
+          <li next-conv="pissed">They might be really pissed, they have been working on it for 2 years in stealth mode.</li>
+          <li next-conv="lead">Do we have any lead?</li>
+        </conv>
+        <conv id="pissed" prompt="They are, and they don't want the press looking around">
+          <li next-conv="lead">Do we have any lead?</li>
+        </conv>
+        <conv id="lead" prompt="The research director left the company a few months ago">
+          <li next-conv="william">What? I didn't know William left QS...</li>
+        </conv>
+        <conv id="william" prompt="You seem to know a lot about them, where would you start?">
+          <li next-conv="find-william">We have to find William, obviously.</li>
+        </conv>
+        <conv id="find-william" prompt="We have reasons to believe that he moved with his uncle to the abandoned station">
+          <li next-conv="find-william-2">What? Why would a brilliant physicist do that?</li>
+        </conv>
+        <conv id="find-william-2" prompt="That's where your work starts. Go there and figure it out.">
+          <li goto-room="entrance">So exciting! I'm on my way to the station!</li>
+        </conv>
+        <conv id="vacation" prompt="Sure! I'll give the most exciting physics case to Andy">
+          <li next-conv="next-assignment">Wait, physics? What is it about?</li>
+        </conv>
+      </conv-group>
+    </room>
+
+
+    <room id="entrance">
+      <img src="entrance.jpg"></img>
+      <region coords="452, 249, 570, 446" goto-room="gatekeeper" tooltip="Main door"></region>
+    </room>
+
+
+    <room id="gatekeeper">
+      <img src="gatekeeper.jpg"></img>
+      <region coords="464, 308, 564, 449" show-conv="gatekeeper.main" tooltip="Gate keeper"></region>
+      <conv-group id="gatekeeper">
+        <prompt style="left: 520; top: 290"></prompt>
+        <conv id="main" prompt="What do you want?">
+          <li next-conv="want-in">I want in</li>
+          <li next-conv="cable">I'm here to repair the cable</li>
+        </conv>
+        <conv id="want-in" prompt="And why should I let you in?">
+          <li next-conv="police">Because I am the police!</li>
+          <li next-conv="cable">Because I have to repair the cable</li>
+        </conv>
+        <conv id="police" prompt="I don't like you, go away!">
+          <li goto-room="entrance">I will, with a warrant!</li>
+          <li next-conv="want-in">Sorry, wrong start, please let me in</li>
+        </conv>
+        <conv id="cable" prompt="We don't have TV here">
+          <li next-conv="tv-problem">That might be the problem</li>
+          <li next-conv="want-in">I still need to get inside.</li>
+        </conv>
+        <conv id="tv-problem" prompt="Ah! please come in">
+          <li goto-room="inside">Thanks!</li>
+        </conv>
+      </conv-group>
+    </room>
+
+    <room id="gatekeeper:banished">
+      <img src="gatekeeper.jpg"></img>
+      <region coords="0, 0, 1024, 448" tooltip="station">
+        <give id="boots" show-conv="self.boots"></give>
+        <give default say="This is not working"></give>
+      </region>
+      <region coords="464, 308, 564, 448" show-conv="gatekeeper.main" tooltip="Gate keeper"></region>
+      <conv-group id="gatekeeper">
+        <prompt style="left: 520; top: 290"></prompt>
+        <conv id="main" prompt="You are not welcome here">
+          <li next-conv="want-in">Let me in</li>
+          <li next-conv="cable">I'm here to repair the cable</li>
+        </conv>
+        <conv id="want-in" prompt="No">
+          <li next-conv="main">I need to finish my investigation</li>
+          <li goto-room="gatekeeper">Thanks for nothing</li>
+        </conv>
+        <conv id="cable" prompt="I won't fall for your tricks anymore">
+          <li next-conv="want-in">I still need to get inside.</li>
+          <li goto-room="gatekeeper">Thanks for nothing</li>
+        </conv>
+      </conv-group>
+      <conv-group id="self">
+        <conv id="boots">
+          <li goto-room="outside2" inventory-del="boots">I'll try this boots, maybe I can jump to the other side of the station</li>
+        </conv>
+      </conv-group>
+    </room>
+
+
+    <room id="inside">
+      <img src="inside.jpg"></img>
+      <region coords="528, 216, 636, 345" goto-room="corridor" tooltip="Go upstairs"></region>
+      <region coords="381, 216, 483, 335" goto-room="platform" tooltip="Go downstairs"></region>
+      <region coords="78, 261, 221, 401" goto-room="canteen" tooltip="Canteen"></region>
+      <region coords="651, 303, 802, 385" goto-room="sorcery-store" tooltip="Sorcery shop"></region>
+      <region coords="268, 333, 452, 448" show-conv="crazy.main" tooltip="Crazy guy"></region>
+      <region coords="530, 344, 600, 444" show-conv="old-lady.main" tooltip="Old lady"></region>
+      <region coords="887, 343, 1025, 451" show-conv="boy.main" tooltip="Busy boy">
+        <give id="peanuts" show-conv="boy.main" inventory-del="peanuts"></give>
+        <give id="badge" show-conv="boy.crazy"></give>
+        <give default show-conv="boy.not-wanted"></give>
+      </region>
+      <region coords="0, 0, 79, 446" goto-room="outside2" tooltip="Second entrance"></region>
+      <conv-group id="crazy">
+        <prompt style="left: 400; top: 310"></prompt>
+        <conv id="main" prompt="Do you want some peanuts?">
+          <li goto-room="inside" inventory-add="peanuts">Yes, thank you!</li>
+          <li next-conv="doing">Hey, what are you doing?</li>
+        </conv>
+        <conv id="doing" prompt="What is the answer to the ultimate question of life, the universe, and everything?">
+          <li next-conv="42">If I recall correctly, 42</li>
+          <li next-conv="main">You seem busy, what is that?</li>
+        </conv>
+        <conv id="42" prompt="Do you have all the answers?">
+          <li next-conv="lady">Not all, I don't know what that old lady is doing here.</li>
+          <li goto-room="inside">I do, I train every day.</li>
+        </conv>
+        <conv id="lady" prompt="She is not too smart, but she knows everyone">
+          <li next-conv="william">And you? Do you know William Nutter?</li>
+          <li goto-room="inside">I have to talk to her then.</li>
+        </conv>
+        <conv id="william" prompt="No, but I do know William Shakespeare. We are best friends.">
+          <li goto-room="inside">Lucky you! Let's talk more later.</li>
+          <li next-conv="clue" remote-room-state="canteen:knows-margarita">I need to find William, it's important.</li>
+        </conv>
+        <conv id="clue" prompt="You need to relax. Moe, in the canteen, makes great jalapeño Margarita!">
+          <li goto-room="inside">I can't drink while on duty.</li>
+          <li goto-room="inside">Maybe later.</li>
+        </conv>
+      </conv-group>
+
+      <conv-group id="old-lady">
+        <prompt style="left: 570; top: 325"></prompt>
+        <conv id="main" prompt="Hi there, do I know you?">
+          <li next-conv="intro">I don't think we have been properly introduced...</li>
+          <li next-conv="doing">Hey, what are you doing?</li>
+        </conv>
+        <conv id="intro" prompt="My name is Sharon, and you?">
+          <li next-conv="my-name">I'm Case; Justin Case.</li>
+          <li next-conv="doing">Why are you there staring at everything?</li>
+        </conv>
+        <conv id="my-name" prompt="You got a funny name, what are you doing here?">
+          <li next-conv="william">I'm looking for William Nutter.</li>
+          <li next-conv="dog">I lost my dog, have you seen it?</li>
+        </conv>
+        <conv id="william" prompt="Oh, you mean the Mayor">
+          <li next-conv="info-mayor">What do you know about him?</li>
+          <li next-conv="mayor-when">Since when is he a mayor?</li>
+        </conv>
+        <conv id="info-mayor" prompt="He is the smartest person in the city.">
+          <li next-conv="city">What city?</li>
+          <li next-conv="doing">Does he tell you to stare at everything?</li>
+        </conv>
+        <conv id="city" prompt="Look around you, *this* city.">
+          <li next-conv="mayor-where">Where can I find him?</li>
+          <li next-conv="doing">Are you here to help guests?</li>
+        </conv>
+        <conv id="mayor-where" prompt="The mayor lives and works on the first floor, until Elvis returns.">
+          <li next-conv="elvis">What about Elvis?</li>
+          <li next-conv="dog">Have you seen my dog?</li>
+        </conv>
+        <conv id="doing" prompt="What?">
+          <li next-conv="dog">Have you seen my dog?</li>
+          <li goto-room="inside">Nevermind</li>
+        </conv>
+        <conv id="mayor-when" prompt="Quite recently, he took over from his uncle.">
+          <li next-conv="info-mayor">What do you know about him?</li>
+          <li goto-room="inside">Thanks, talk to you later!</li>
+        </conv>
+        <conv id="dog" prompt="There are no dogs in this place.">
+          <li next-conv="william">What about scientists? Do you know William Nutter?</li>
+          <li next-conv="doing">What are you doing?</li>
+        </conv>
+        <conv id="elvis" prompt="He is convinced that Elvis is still alive. Smart but nuts..">
+          <li goto-room="inside">Thanks for your help!</li>
+        </conv>
+      </conv-group>
+
+      <conv-group id="boy">
+        <prompt style="right: 50; top: 315" class="rtl"></prompt>
+        <conv id="main" prompt="1, 2, 3, 5, 8, 13, 21">
+          <li next-conv="wrong-number">29</li>
+          <li next-conv="correct-number">34</li>
+        </conv>
+        <conv id="correct-number" prompt="Nature is beautiful">
+          <li next-conv="out">You could go out and experience it</li>
+          <li next-conv="doing">Why are you doing sequences?</li>
+        </conv>
+        <conv id="wrong-number" prompt="Go away, I hate you!">
+          <li goto-room="inside">Sorry...</li>
+        </conv>
+        <conv id="out" prompt="But here I am safe">
+          <li next-conv="safe">Safe from what?</li>
+          <li next-conv="doing">What is it that you do that keeps you safe?</li>
+        </conv>
+        <conv id="safe" prompt="From the crazy people outside of the city.">
+          <li next-conv="william">Does William keep you safe from them?</li>
+          <li next-conv="crazy">I'm not crazy!</li>
+        </conv>
+        <conv id="william" prompt="Are you William?">
+          <li next-conv="quantum">I'm not. Do you know about quantum locomotives?</li>
+          <li next-conv="help">No, but I can help with safety.</li>
+        </conv>
+        <conv id="quantum" prompt="They are beautiful machines">
+          <li next-conv="quantum-info">Have you ever seen one?</li>
+          <li next-conv="quantum-info">Where is it?</li>
+        </conv>
+        <conv id="quantum-info" prompt="Who are you?">
+          <li next-conv="police">I'm an agent of the law</li>
+          <li next-conv="help">I'm here to help</li>
+        </conv>
+        <conv id="police" prompt="You are crazy people!">
+          <li next-conv="crazy">Hey, I'm not crazy!</li>
+          <li next-conv="help">I'm here to help</li>
+        </conv>
+        <conv id="help" prompt="The Mayor helps us">
+          <li next-conv="mayor-where">Where do I find the mayor?</li>
+          <li next-conv="doing">And how are you helping the mayor?</li>
+        </conv>
+        <conv id="mayor-where" prompt="Room 144, beautiful...">
+          <li goto-room="inside">Thanks!</li>
+        </conv>
+        <conv id="doing" prompt="1, 4, 9, 16, 25, 36">
+          <li next-conv="wrong-number">41</li>
+          <li next-conv="correct-number">49</li>
+        </conv>
+        <conv id="crazy" prompt="Go away, crazy people!">
+          <li goto-room="inside">Sorry...</li>
+        </conv>
+        <conv id="not-wanted" prompt="I don't want that">
+          <li next-conv="main">Do you have a minute?</li>
+        </conv>
+      </conv-group>
+    </room>
+
+
+    <room id="outside2">
+      <img src="outside2.jpg"></img>
+      <region coords="249, 335, 332, 446" goto-room="inside" tooltip="Door"></region>
+    </room>
+
+
+    <room id="corridor">
+      <img src="corridor.jpg"></img>
+      <region coords="458, 132, 555, 232" goto-room="inside" tooltip="Go downstairs"></region>
+      <region coords="235, 47, 339, 451" goto-room="corridor-mayor" tooltip="Left door"></region>
+      <region coords="673, 0, 810, 448" say="This door is closed" tooltip="Right door">
+        <give id="key" goto-room="guesthouse"></give>
+        <give default say="This doesn't open the door"></give>
+      </region>
+    </room>
+
+    <room id="corridor:mayor-gone">
+      <img src="corridor.jpg"></img>
+      <region coords="458, 132, 555, 232" goto-room="inside" tooltip="Go downstairs"></region>
+      <region coords="235, 47, 339, 451" goto-room="mayor-home" tooltip="Left door"></region>
+      <region coords="673, 0, 810, 448" say="This door is closed" tooltip="Right door">
+        <give id="key" goto-room="guesthouse"></give>
+        <give default say="This doesn't open the door"></give>
+      </region>
+    </room>
+
+
+    <room id="corridor-mayor">
+      <img src="corridor-mayor.jpg"></img>
+      <conv-group id="mayor">
+        <prompt style="left: 300; top: 150"></prompt>
+        <conv id="main" default prompt="Who are you? What do you want?">
+          <li next-conv="william">I'm looking for William Nutter</li>
+          <li next-conv="chimney">I'm the chimney sweep</li>
+          <li next-conv="go-away">I'm agent Case</li>
+        </conv>
+        <conv id="william" prompt="I don't know that person, go away">
+          <li goto-room="corridor">Sorry</li>
+          <li next-conv="go-away">It's important</li>
+        </conv>
+        <conv id="go-away" prompt="Go away!">
+          <li goto-room="corridor">Sorry</li>
+        </conv>
+        <conv id="chimney" prompt="Do I look like *that* stupid?">
+          <li next-conv="go-away">Ok, I'm an agent of the law</li>
+        </conv>
+      </conv-group>
+    </room>
+
+    <room id="corridor-mayor:beer">
+      <img src="corridor-mayor.jpg"></img>
+      <conv-group id="mayor">
+        <prompt style="left: 300; top: 150"></prompt>
+        <conv id="main" default prompt="Who are you? What do you want?">
+          <li next-conv="william">I'm looking for William Nutter</li>
+          <li next-conv="drink">I like what you do for the community, and bought you a drink</li>
+          <li next-conv="go-away">I'm agent Case</li>
+        </conv>
+        <conv id="william" prompt="I don't know that person, go away">
+          <li goto-room="corridor">Sorry</li>
+          <li next-conv="go-away">It's important</li>
+        </conv>
+        <conv id="go-away" prompt="Go away!">
+          <li goto-room="corridor">Sorry</li>
+        </conv>
+        <conv id="drink" prompt="Oh, thanks! I could use a drink right now">
+          <li goto-room="corridor-mayor:elvis" inventory-del="beer">You're welcome!</li>
+        </conv>
+      </conv-group>
+    </room>
+
+    <room id="corridor-mayor:elvis">
+      <img src="corridor-elvis.jpg"></img>
+      <conv-group id="mayor">
+        <prompt style="left: 300; top: 150"></prompt>
+        <conv id="main" default prompt="Hey, that's Elvis. Wait! I'm your biggest fan!">
+          <li goto-room="corridor:mayor-gone">He seems to be leaving, go catch him!</li>
+        </conv>
+      </conv-group>
+    </room>
+
+
+    <room id="mayor-home">
+      <img src="mayor-home.jpg"></img>
+      <region coords="-1, -1, 136, 447" goto-room="corridor" tooltip="Corridor"></region>
+      <region coords="605, 321, 750, 408" goto-room="mayor-home:drawer-open" tooltip="Drawer"></region>
+      <region coords="785, 343, 926, 437" say="This drawer is empty" tooltip="Drawer"></region>
+      <region coords="198, 337, 326, 426" say="There is nothing interesting on that drawer" tooltip="Drawer"></region>
+      <region coords="320, 118, 555, 326" say="The computer seems to be locked" tooltip="Computer"></region>
+    </room>
+
+    <room id="mayor-home:drawer-open">
+      <img src="mayor-home-drawer.jpg"></img>
+      <conv-group id="self">
+        <conv id="card" default>
+          <li next-conv="blueprint" inventory-add="card">There is a magnetic card on this drawer</li>
+        </conv>
+        <conv id="blueprint">
+          <li next-conv="blueprint2">Under the card there are some blueprints</li>
+        </conv>
+        <conv id="blueprint2">
+          <li goto-room="mayor-home:caught">I'm no expert, but this seems like a locomotive!</li>
+        </conv>
+      </conv-group>
+    </room>
+
+    <room id="mayor-home:caught">
+      <img src="mayor-home-caught.jpg"></img>
+      <conv-group id="mayor">
+        <prompt style="left: 60; top: 110"></prompt>
+        <conv id="caught" default prompt="What are you doing here!">
+          <li next-conv="banished">Are these the blueprints of the quantum locomotive?</li>
+        </conv>
+        <conv id="banished" prompt="That is none of your business! The gatekeeper will escort you out of the station.">
+          <li goto-room="gatekeeper:banished">I'll be back!</li>
+        </conv>
+      </conv-group>
+    </room>
+
+
+    <room id="sorcery-store">
+      <img src="sorcery.jpg"></img>
+      <region coords="413, 266, 634, 448" show-conv="shopkeeper.main" tooltip="Shopkeeper"></region>
+      <region coords="0, 123, 96, 448" goto-room="inside" tooltip="Main hall"></region>
+      <region coords="928, 123, 1024, 448" goto-room="inside" tooltip="Main hall"></region>
+
+
+      <conv-group id="shopkeeper">
+        <prompt style="left: 540; top: 260"></prompt>
+        <conv id="main" prompt="Hey, check out our vampire-friendly garlic">
+          <li next-conv="want-sth">I'm not a vampire!</li>
+          <li goto-room="sorcery-store" inventory-add="peanuts">I just want free peanuts</li>
+          <li next-conv="gatekeeper">Hey, are you a relative of the gatekeeper?</li>
+        </conv>
+
+        <conv id="want-sth" prompt="What can I offer you then?">
+          <li goto-room="sorcery-store" inventory-add="peanuts">I'll just have some free peanuts</li>
+          <li next-conv="pay" inventory-add="beer,boots" remote-room-state="corridor-mayor:beer">I want a ghost invoking beer</li>
+          <li next-conv="railgun">Do you have anti-matter rail guns?</li>
+        </conv>
+
+        <conv id="pay" prompt="There you go, it's $50. And you get a pair of anti-gravity boots for free!">
+          <li goto-room="sorcery-store">Oh, thanks a lot!</li>
+        </conv>
+
+        <conv id="gatekeeper" prompt="Who is that?">
+          <li next-conv="gatekeeper2">This guy at the main door. You look really similar.</li>
+          <li next-conv="want-sth">Nevermind</li>
+        </conv>
+
+        <conv id="gatekeeper2" prompt="I don't know what you are talking about">
+          <li next-conv="want-sth">Nevermind</li>
+        </conv>
+
+        <conv id="railgun" prompt="We don't sell deadly weapons here.">
+          <li goto-room="sorcery-store" inventory-add="peanuts">I'll just have some free peanuts then</li>
+          <li next-conv="pay" inventory-add="beer,boots" remote-room-state="corridor-mayor:beer">I'll have the ghost invoking beer then</li>
+        </conv>
+      </conv-group>
+    </room>
+
+
+    <room id="canteen">
+      <img src="canteen.jpg"></img>
+      <region coords="251, 185, 466, 442" show-conv="barman.main" tooltip="Barman">
+        <give default show-conv="barman.not-wanted"></give>
+      </region>
+      <region coords="535, 103, 666, 373" show-conv="barman.kitchen" tooltip="Kitchen"></region>
+      <region coords="798, 110, 1025, 449" goto-room="inside" tooltip="Main hall"></region>
+      <conv-group id="barman">
+        <prompt style="left: 360; top: 180"></prompt>
+        <conv id="main" prompt="What?">
+          <li next-conv="ask">Hi...</li>
+          <li next-conv="ask">Nothing...</li>
+          <li next-conv="ask">I'm an agent of the law</li>
+        </conv>
+        <conv id="ask" prompt="Are you going to order something?">
+          <li next-conv="water">I'd have a glass of water</li>
+          <li next-conv="doing">What are you doing with this glass?</li>
+        </conv>
+        <conv id="water" prompt="There is no water here. Anything else?">
+          <li next-conv="doing">What are you doing with this glass?</li>
+        </conv>
+        <conv id="doing" prompt="None of your business. Anything else?">
+          <li goto-room="canteen">Not now.</li>
+        </conv>
+        <conv id="kitchen" prompt="Hey, where do you think you are going?">
+          <li next-conv="no-kitchen">To the kitchen...</li>
+          <li next-conv="ask">Nowhere, sorry</li>
+        </conv>
+        <conv id="no-kitchen" prompt="Not on my watch!">
+          <li next-conv="ask">Sorry...</li>
+        </conv>
+        <conv id="not-wanted" prompt="The only thing I want from you is money">
+          <li goto-room="canteen">Sorry...</li>
+        </conv>
+      </conv-group>
+    </room>
+
+    <room id="canteen:knows-margarita">
+      <img src="canteen.jpg"></img>
+      <region coords="251, 185, 466, 442" show-conv="barman.main" tooltip="Barman">
+        <give default show-conv="barman.not-wanted"></give>
+      </region>
+      <region coords="535, 103, 666, 373" show-conv="barman.kitchen" tooltip="Kitchen"></region>
+      <region coords="798, 110, 1025, 449" goto-room="inside" tooltip="Main hall"></region>
+      <conv-group id="barman">
+        <prompt style="left: 360; top: 180"></prompt>
+        <conv id="main" prompt="What?">
+          <li next-conv="ask">Hi...</li>
+          <li next-conv="ask">Nothing...</li>
+          <li next-conv="margarita">I'd like to try the jalapeño margarita</li>
+        </conv>
+        <conv id="ask" prompt="Are you going to order something?">
+          <li next-conv="margarita">I'd like to try the jalapeño margarita</li>
+        </conv>
+        <conv id="margarita" prompt="There you go">
+          <li goto-room="canteen:asked-margarita" inventory-add="key">Oh, there is a key at the bottom of this glass</li>
+        </conv>
+        <conv id="kitchen" prompt="Hey, where do you think you are going?">
+          <li next-conv="no-kitchen">To the kitchen...</li>
+          <li next-conv="ask">Nowhere, sorry</li>
+        </conv>
+        <conv id="no-kitchen" prompt="Not on my watch!">
+          <li next-conv="ask">Sorry...</li>
+        </conv>
+        <conv id="not-wanted" prompt="The only thing I want from you is money">
+          <li goto-room="canteen">Sorry...</li>
+        </conv>
+      </conv-group>
+    </room>
+
+    <room id="canteen:asked-margarita">
+      <img src="canteen.jpg"></img>
+      <region coords="251, 185, 466, 442" show-conv="barman.main" tooltip="Barman">
+        <give id="envelope" show-conv="envelope.main"></give>
+        <give default show-conv="barman.not-wanted"></give>
+      </region>
+      <region coords="535, 103, 666, 373" show-conv="barman.kitchen" tooltip="Kitchen"></region>
+      <region coords="798, 110, 1025, 449" goto-room="inside" tooltip="Main hall"></region>
+      <conv-group id="barman">
+        <prompt style="left: 360; top: 180"></prompt>
+        <conv id="main" prompt="What?">
+          <li next-conv="ask">Hi...</li>
+          <li next-conv="ask">Nothing...</li>
+        </conv>
+        <conv id="ask" prompt="Are you going to order something?">
+          <li goto-room="canteen">I'm good, thanks</li>
+        </conv>
+        <conv id="kitchen" prompt="Hey, where do you think you are going?">
+          <li next-conv="no-kitchen">To the kitchen...</li>
+          <li next-conv="ask">Nowhere, sorry</li>
+        </conv>
+        <conv id="no-kitchen" prompt="Not on my watch!">
+          <li next-conv="ask">Sorry...</li>
+        </conv>
+        <conv id="not-wanted" prompt="The only thing I want from you is money">
+          <li goto-room="canteen">Sorry...</li>
+        </conv>
+      </conv-group>
+      <conv-group id="envelope">
+        <prompt style="left: 360; top: 180"></prompt>
+        <conv id="main" prompt="Oh! A letter from Tahra. She needs *urgent* help. I'll be back, don't touch anything!">
+          <li goto-room="canteen:empty">Sure!</li>
+        </conv>
+      </conv-group>
+    </room>
+
+    <room id="canteen:empty">
+      <img src="canteen-empty.jpg"></img>
+      <region coords="535, 103, 666, 373" goto-room="kitchen" tooltip="Kitchen"></region>
+      <region coords="798, 110, 1025, 449" goto-room="inside" tooltip="Main hall"></region>
+    </room>
+
+
+    <room id="kitchen">
+      <img src="kitchen-broom.jpg"></img>
+      <region coords="645,216,863,514" goto-room="kitchen:nobroom" inventory-add="broom" tooltip="Broom"></region>
+      <region coords="0, 0, 96, 448" goto-room="canteen" tooltip="Canteen"></region>
+      <region coords="928, 0, 1024, 448" goto-room="canteen" tooltip="Canteen"></region>
+    </room>
+
+    <room id="kitchen:nobroom">
+      <img src="kitchen.jpg"></img>
+      <region coords="0, 0, 96, 448" goto-room="canteen" tooltip="Canteen"></region>
+      <region coords="928, 0, 1024, 448" goto-room="canteen" tooltip="Canteen"></region>
+    </room>
+
+
+    <room id="platform">
+      <img src="platform.jpg"></img>
+      <region coords="460, 271, 546, 395" goto-room="storage-room" tooltip="Storage room"></region>
+      <region coords="681, 202, 845, 448" goto-room="inside" tooltip="Main hall"></region>
+    </room>
+
+    <room id="storage-room">
+      <img src="storage-room.jpg"></img>
+      <region coords="877, 0, 1024, 448" goto-room="platform" tooltip="Platform"></region>
+      <region coords="616, 229, 717, 432" goto-room="storage-room:unlocked" tooltip="Rail lever"></region>
+      <region coords="477, 228, 602, 437" say="These levers won't move" tooltip="Rail levers"></region>
+      <region coords="15,0,239,449" say="I have no use for any of these things." tooltip="Useless stuff"></region>
+    </room>
+
+    <room id="storage-room:unlocked">
+      <img src="storage-secret.jpg"></img>
+      <region coords="877, 0, 1024, 448" goto-room="platform" tooltip="Platform"></region>
+      <region coords="288,18,460,394" goto-room="secret-passage" tooltip="Secret passage"></region>
+    </room>
+
+    <room id="secret-passage">
+      <img src="secret-passage.jpg"></img>
+      <region coords="261, 166, 544, 319" goto-room="storage-room" tooltip="Storage room"></region>
+      <region coords="843, 146, 1024, 448" say="This door is locked with a card reader" tooltip="Security door">
+        <give id="card" goto-room="datacenter"></give>
+        <give id="key" say="There is no keyhole in this door."></give>
+        <give default say="This doesn't seem to open the door."></give>
+      </region>
+      <region coords="560, 139, 735, 375" goto-room="pin-code-1" tooltip="High security door"></region>
+    </room>
+
+
+    <room id="pin-code-1">
+      <img src="keypad.jpg"></img>
+      <region coords="458, 55, 564, 169" goto-room="pin-code-2-good" tooltip="1"></region>
+      <region coords="576, 55, 678, 161" goto-room="pin-code-2-bad" tooltip="2"></region>
+      <region coords="694, 44, 805, 158" goto-room="pin-code-2-bad" tooltip="3"></region>
+      <region coords="459, 181, 565, 295" goto-room="pin-code-2-bad" tooltip="4"></region>
+      <region coords="574, 175, 684, 290" goto-room="pin-code-2-bad" tooltip="5"></region>
+      <region coords="695, 172, 806, 286" goto-room="pin-code-2-bad" tooltip="6"></region>
+      <region coords="458, 306, 564, 420" goto-room="pin-code-2-bad" tooltip="7"></region>
+      <region coords="575, 303, 685, 418" goto-room="pin-code-2-bad" tooltip="8"></region>
+      <region coords="693, 299, 804, 413" goto-room="pin-code-2-bad" tooltip="9"></region>
+      <region coords="0, 0, 270, 448" goto-room="secret-passage" tooltip="Secret passage"></region>
+      <region coords="897, 0, 1024, 448" goto-room="secret-passage" tooltip="Secret passage"></region>
+    </room>
+
+    <room id="pin-code-2-good">
+      <img src="keypad.jpg"></img>
+      <region coords="458, 55, 564, 169" goto-room="pin-code-3-bad" tooltip="1"></region>
+      <region coords="576, 55, 678, 161" goto-room="pin-code-3-bad" tooltip="2"></region>
+      <region coords="694, 44, 805, 158" goto-room="pin-code-3-bad" tooltip="3"></region>
+      <region coords="459, 181, 565, 295" goto-room="pin-code-3-bad" tooltip="4"></region>
+      <region coords="574, 175, 684, 290" goto-room="pin-code-3-good" tooltip="5"></region>
+      <region coords="695, 172, 806, 286" goto-room="pin-code-3-bad" tooltip="6"></region>
+      <region coords="458, 306, 564, 420" goto-room="pin-code-3-bad" tooltip="7"></region>
+      <region coords="575, 303, 685, 418" goto-room="pin-code-3-bad" tooltip="8"></region>
+      <region coords="693, 299, 804, 413" goto-room="pin-code-3-bad" tooltip="9"></region>
+      <region coords="0, 0, 270, 448" goto-room="secret-passage" tooltip="Secret passage"></region>
+      <region coords="897, 0, 1024, 448" goto-room="secret-passage" tooltip="Secret passage"></region>
+    </room>
+
+    <room id="pin-code-2-bad">
+      <img src="keypad.jpg"></img>
+      <region coords="458, 55, 564, 169" goto-room="pin-code-3-bad" tooltip="1"></region>
+      <region coords="576, 55, 678, 161" goto-room="pin-code-3-bad" tooltip="2"></region>
+      <region coords="694, 44, 805, 158" goto-room="pin-code-3-bad" tooltip="3"></region>
+      <region coords="459, 181, 565, 295" goto-room="pin-code-3-bad" tooltip="4"></region>
+      <region coords="574, 175, 684, 290" goto-room="pin-code-3-bad" tooltip="5"></region>
+      <region coords="695, 172, 806, 286" goto-room="pin-code-3-bad" tooltip="6"></region>
+      <region coords="458, 306, 564, 420" goto-room="pin-code-3-bad" tooltip="7"></region>
+      <region coords="575, 303, 685, 418" goto-room="pin-code-3-bad" tooltip="8"></region>
+      <region coords="693, 299, 804, 413" goto-room="pin-code-3-bad" tooltip="9"></region>
+      <region coords="0, 0, 270, 448" goto-room="secret-passage" tooltip="Secret passage"></region>
+      <region coords="897, 0, 1024, 448" goto-room="secret-passage" tooltip="Secret passage"></region>
+    </room>
+
+    <room id="pin-code-3-good">
+      <img src="keypad.jpg"></img>
+      <region coords="458, 55, 564, 169" goto-room="pin-code-4-bad" tooltip="1"></region>
+      <region coords="576, 55, 678, 161" goto-room="pin-code-4-bad" tooltip="2"></region>
+      <region coords="694, 44, 805, 158" goto-room="pin-code-4-bad" tooltip="3"></region>
+      <region coords="459, 181, 565, 295" goto-room="pin-code-4-bad" tooltip="4"></region>
+      <region coords="574, 175, 684, 290" goto-room="pin-code-4-bad" tooltip="5"></region>
+      <region coords="695, 172, 806, 286" goto-room="pin-code-4-bad" tooltip="6"></region>
+      <region coords="458, 306, 564, 420" goto-room="pin-code-4-bad" tooltip="7"></region>
+      <region coords="575, 303, 685, 418" goto-room="pin-code-4-bad" tooltip="8"></region>
+      <region coords="693, 299, 804, 413" goto-room="pin-code-4-good" tooltip="9"></region>
+      <region coords="0, 0, 270, 448" goto-room="secret-passage" tooltip="Secret passage"></region>
+      <region coords="897, 0, 1024, 448" goto-room="secret-passage" tooltip="Secret passage"></region>
+    </room>
+
+    <room id="pin-code-3-bad">
+      <img src="keypad.jpg"></img>
+      <region coords="458, 55, 564, 169" goto-room="pin-code-4-bad" tooltip="1"></region>
+      <region coords="576, 55, 678, 161" goto-room="pin-code-4-bad" tooltip="2"></region>
+      <region coords="694, 44, 805, 158" goto-room="pin-code-4-bad" tooltip="3"></region>
+      <region coords="459, 181, 565, 295" goto-room="pin-code-4-bad" tooltip="4"></region>
+      <region coords="574, 175, 684, 290" goto-room="pin-code-4-bad" tooltip="5"></region>
+      <region coords="695, 172, 806, 286" goto-room="pin-code-4-bad" tooltip="6"></region>
+      <region coords="458, 306, 564, 420" goto-room="pin-code-4-bad" tooltip="7"></region>
+      <region coords="575, 303, 685, 418" goto-room="pin-code-4-bad" tooltip="8"></region>
+      <region coords="693, 299, 804, 413" goto-room="pin-code-4-bad" tooltip="9"></region>
+      <region coords="0, 0, 270, 448" goto-room="secret-passage" tooltip="Secret passage"></region>
+      <region coords="897, 0, 1024, 448" goto-room="secret-passage" tooltip="Secret passage"></region>
+    </room>
+
+    <room id="pin-code-4-good">
+      <img src="keypad.jpg"></img>
+      <region coords="458, 55, 564, 169" goto-room="pin-code-wrong" tooltip="1"></region>
+      <region coords="576, 55, 678, 161" goto-room="pin-code-wrong" tooltip="2"></region>
+      <region coords="694, 44, 805, 158" goto-room="pin-code-wrong" tooltip="3"></region>
+      <region coords="459, 181, 565, 295" goto-room="pin-code-wrong" tooltip="4"></region>
+      <region coords="574, 175, 684, 290" goto-room="pin-code-wrong" tooltip="5"></region>
+      <region coords="695, 172, 806, 286" goto-room="pin-code-wrong" tooltip="6"></region>
+      <region coords="458, 306, 564, 420" goto-room="lab" tooltip="7"></region>
+      <region coords="575, 303, 685, 418" goto-room="pin-code-wrong" tooltip="8"></region>
+      <region coords="693, 299, 804, 413" goto-room="pin-code-wrong" tooltip="9"></region>
+      <region coords="0, 0, 270, 448" goto-room="secret-passage" tooltip="Secret passage"></region>
+      <region coords="897, 0, 1024, 448" goto-room="secret-passage" tooltip="Secret passage"></region>
+    </room>
+
+    <room id="pin-code-4-bad">
+      <img src="keypad.jpg"></img>
+      <region coords="458, 55, 564, 169" goto-room="pin-code-wrong" tooltip="1"></region>
+      <region coords="576, 55, 678, 161" goto-room="pin-code-wrong" tooltip="2"></region>
+      <region coords="694, 44, 805, 158" goto-room="pin-code-wrong" tooltip="3"></region>
+      <region coords="459, 181, 565, 295" goto-room="pin-code-wrong" tooltip="4"></region>
+      <region coords="574, 175, 684, 290" goto-room="pin-code-wrong" tooltip="5"></region>
+      <region coords="695, 172, 806, 286" goto-room="pin-code-wrong" tooltip="6"></region>
+      <region coords="458, 306, 564, 420" goto-room="pin-code-wrong" tooltip="7"></region>
+      <region coords="575, 303, 685, 418" goto-room="pin-code-wrong" tooltip="8"></region>
+      <region coords="693, 299, 804, 413" goto-room="pin-code-wrong" tooltip="9"></region>
+      <region coords="0, 0, 270, 448" goto-room="secret-passage" tooltip="Secret passage"></region>
+      <region coords="897, 0, 1024, 448" goto-room="secret-passage" tooltip="Secret passage"></region>
+    </room>
+
+    <room id="pin-code-wrong">
+      <img src="secret-passage.jpg"></img>
+      <conv-group id="self">
+        <conv id="main" default>
+          <li goto-room="secret-passage">That doesn't seem to work</li>
+        </conv>
+      </conv-group>
+    </room>
+
+
+    <room id="datacenter">
+      <img src="datacenter.jpg"></img>
+      <region coords="368, 135, 438, 330" goto-room="secret-passage" tooltip="Secret passage"></region>
+      <region coords="593, 140, 663, 335" goto-room="secret-passage" tooltip="Secret passage"></region>
+      <region coords="454, 184, 573, 266" say="I wonder why the witch doesn't reflect on the floor." tooltip="Frame"></region>
+      <region coords="463, 49, 554, 175" say="I can't reach them" tooltip="Light bulbs">
+        <give id="broom" goto-room="datacenter:emergency"></give>
+        <give id="boots" say="I'm not using the boots indoor."></give>
+        <give default say="I can't reach them with this"></give>
+      </region>
+    </room>
+
+    <room id="datacenter:emergency">
+      <img src="datacenter-emergency.jpg"></img>
+      <region coords="368, 135, 438, 330" goto-room="secret-passage" tooltip="Secret passage"></region>
+      <region coords="593, 140, 663, 335" goto-room="secret-passage" tooltip="Secret passage"></region>
+      <region coords="454, 184, 573, 266" say="That looks like a pin code" tooltip="Frame"></region>
+    </room>
+
+
+    <room id="lab">
+      <img src="lab.jpg"></img>
+      <region coords="0, 0, 130, 447" goto-room="secret-passage" tooltip="Secret passage"></region>
+      <region coords="179, 224, 447, 434" show-conv="self.train" tooltip="Train"></region>
+      <region coords="828, 158, 972, 298" say="A regular ventilation grille" tooltip="Vent"></region>
+      <conv-group id="self">
+        <conv id="train">
+          <li next-conv="quantum">That is most definitely a locomotive...</li>
+        </conv>
+        <conv id="quantum">
+          <li next-conv="stickers">Not sure it is quantum...</li>
+        </conv>
+        <conv id="stickers">
+          <li next-conv="call">Seems like a toy with fancy stickers, and expensive wheels</li>
+        </conv>
+        <conv id="call">
+          <li goto-room="lab-call">I should call Quantum Steam to verify</li>
+        </conv>
+      </conv-group>
+    </room>
+
+
+    <room id="lab-call">
+      <img src="lab-call.jpg"></img>
+      <conv-group id="call">
+        <prompt style="right: 270; bottom: 430" class="rtl"></prompt>
+        <conv id="main" default prompt="Hello dear Justin!">
+          <li next-conv="pic">Hello, have you received the picture?</li>
+        </conv>
+        <conv id="pic" prompt="Yes, you found it!">
+          <li next-conv="confirm">Can you confirm this is the stolen prototype?</li>
+        </conv>
+        <conv id="confirm" prompt="Absolutely, that is our prototype">
+          <li goto-room="lab-william">Ok, I'll have it delivered ASAP</li>
+        </conv>
+      </conv-group>
+    </room>
+
+
+    <room id="lab-william">
+      <img src="lab-william.jpg"></img>
+      <conv-group id="william">
+        <prompt style="left: 60; bottom: 470"></prompt>
+        <conv id="main" default prompt="No you won't take my prototype!!">
+          <li next-conv="stop">And how do you plan to stop me?</li>
+        </conv>
+        <conv id="stop" prompt="I will lock you in this lab!">
+          <li goto-room="lab-locked">Nooooooo!!!</li>
+        </conv>
+      </conv-group>
+    </room>
+
+
+    <room id="lab-locked">
+      <img src="lab.jpg"></img>
+      <region coords="179, 224, 447, 434" say="I still think this is just a toy" tooltip="Train"></region>
+      <region coords="448, 159, 594, 345" say="There is a small coin in the chair" inventory-add="coin" tooltip="Chair"></region>
+      <region coords="828, 158, 972, 298" say="I wish I could open this" tooltip="Vent">
+        <give id="badge" say="The badge is too thick for these screws"></give>
+        <give id="coin" show-conv="self.unscrew"></give>
+        <give default say="This is not useful"></give>
+      </region>
+      <conv-group id="self">
+        <conv id="unscrew">
+          <li goto-room="lab-locked-unscrewed">I managed to remove the screws with the coin</li>
+        </conv>
+      </conv-group>
+    </room>
+
+
+    <room id="lab-locked-unscrewed">
+      <img src="lab.jpg"></img>
+      <region coords="179, 224, 447, 434" say="Useless" tooltip="Train"></region>
+      <region coords="828, 158, 972, 298" say="My fingers don't fit to open it. I need some sort of a lever" tooltip="Unscrewed vent">
+        <give id="badge" goto-room="lab-locked-escape"></give>
+        <give default say="This is not useful"></give>
+      </region>
+    </room>
+
+
+    <room id="lab-locked-escape">
+      <img src="lab-escape.jpg"></img>
+      <region coords="179, 224, 447, 434" show-conv="self.train" tooltip="Train"></region>
+      <region coords="828, 158, 972, 298" goto-room="escape" tooltip="Open vent"></region>
+      <conv-group id="self">
+        <conv id="train">
+          <li goto-room="lab-locked-unscrewed">It won't fit through the vent</li>
+        </conv>
+      </conv-group>
+    </room>
+
+
+    <room id="escape">
+      <img src="end.jpg"></img>
+      <div class="finalized-game">
+        Play the finalized game on
+        <a href="https://el-ryu.itch.io/quantumderail">itch.io</a>.
+      </div>
+    </room>
+
+
+    <room id="guesthouse">
+      <img src="guesthouse.jpg"></img>
+      <region coords="0, 0, 130, 447" goto-room="corridor" tooltip="Corridor"></region>
+      <region coords="783, 345, 946, 436" goto-room="guesthouse:drawer-open" tooltip="Drawer"></region>
+    </room>
+
+    <room id="guesthouse:drawer-open">
+      <img src="guesthouse-drawer-open.jpg"></img>
+      <region coords="0, 0, 130, 447" goto-room="corridor" tooltip="Corridor"></region>
+      <conv-group id="self">
+        <conv id="main" default>
+          <li next-conv="address" inventory-add="envelope">There is an envelope in this drawer, I'll take it</li>
+        </conv>
+        <conv id="address">
+          <li goto-room="guesthouse:done">It's addressed to someone called Moe</li>
+        </conv>
+      </conv-group>
+    </room>
+
+    <room id="guesthouse:done">
+      <img src="guesthouse-drawer-open.jpg"></img>
+      <region coords="0, 0, 130, 447" goto-room="corridor" tooltip="Corridor"></region>
+    </room>
+
+    <inventory initial-contents="badge">
+      <img src="peanuts.png" id="peanuts" tooltip="peanuts" />
+      <img src="badge.png" id="badge" tooltip="Badge" />
+      <img src="broom.png" id="broom" tooltip="Broom" />
+      <img src="key.png" id="key" tooltip="Key" />
+      <img src="envelope.png" id="envelope" tooltip="Envelope" />
+      <img src="beer.png" id="beer" tooltip="Ghost invoking beer" />
+      <img src="boots-springs.png" id="boots" tooltip="Anti-gravity boots">
+      <img src="card.png" id="card" tooltip="Magnetic card">
+      <img src="coin.png" id="coin" tooltip="Small coin">
+    </inventory>
+  </game>
+</body>
+
+</html>

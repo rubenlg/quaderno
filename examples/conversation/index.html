@@ -1,0 +1,51 @@
+<html>
+
+<head>
+  <title>Conversation example</title>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    // Change this to true to enable the debug mode.
+    window.DEBUG = false;
+  </script>
+  <script src="prototype.js"></script>
+</head>
+
+<body>
+  <game first-room="start">
+
+    <room id="start">
+      <img src="intro.png"></img>
+      <region coords="133,107,310,410" show-conv="left-person.start" tooltip="Left person"></region>
+      <region coords="487,120,663,383" show-conv="right-person.start" tooltip="Right person"></region>
+      <conv-group id="left-person">
+        <prompt style="left: 250; top: 150"></prompt>
+        <conv id="start" prompt="Hi there!">
+          <li next-conv="name">Hi, what's your name?</li>
+          <li goto-room="start">Nevermind...</li>
+        </conv>
+        <conv id="name" prompt="My name is Left person, and you?">
+          <li goto-room="start">Nevermind...</li>
+          <li goto-room="finished">I want to finish this game</li>
+        </conv>
+      </conv-group>
+
+      <conv-group id="right-person">
+        <prompt style="left: 600; top: 150"></prompt>
+        <conv id="start" prompt="Hi there!">
+          <li next-conv="name">Hi, where are you from?</li>
+          <li goto-room="start">Nevermind...</li>
+        </conv>
+        <conv id="name" prompt="I'm from github, and you?">
+          <li goto-room="start">Nevermind...</li>
+        </conv>
+      </conv-group>
+    </room>
+
+    <room id="finished">
+      <img src="finished.png"></img>
+    </room>
+
+  </game>
+</body>
+
+</html>
