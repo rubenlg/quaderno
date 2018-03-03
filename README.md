@@ -1,4 +1,4 @@
-# Point & Click adventure game prototyping toolkit.
+# Point & Click adventure game prototyping toolkit. [![Build Status](https://travis-ci.org/rubenlg/quaderno.svg?branch=master)](https://travis-ci.org/rubenlg/quaderno)
 
 ## Usage
 
