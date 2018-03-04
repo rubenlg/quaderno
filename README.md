@@ -11,19 +11,29 @@ This toolkit allows creating game prototypes using purely declarative syntax. Yo
 Here is a simple example:
 
 ```html
+<html>
+<head>
+  <link rel="stylesheet" href="https://rubenlg.github.io/quaderno/src/style.css">
+  <script src="https://rubenlg.github.io/quaderno/jsbin/prototype.js"></script>
+</head>
+<body>
   <game first-room="start">
 
     <room id="start">
-      <img src="intro.png"></img>
+      <img src="https://rubenlg.github.io/quaderno/examples/hello_world/intro.png"></img>
       <region coords="386,428,636,521" goto-room="finished" tooltip="Yes, here!"></region>
     </room>
 
     <room id="finished">
-      <img src="finished.png"></img>
+      <img src="https://rubenlg.github.io/quaderno/examples/hello_world/finished.png"></img>
     </room>
 
   </game>
+</body>
+</html>
 ```
+
+You can save it in a file and open it in your browser.
 
 This simple example creates an adventure game with two rooms. The player moves from one to the other by clicking on the "Click here" word in the `intro.png` image. Let's go through it step by step:
 
