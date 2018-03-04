@@ -1,5 +1,9 @@
 # Point & Click adventure game prototyping toolkit. [![Build Status](https://travis-ci.org/rubenlg/quaderno.svg?branch=master)](https://travis-ci.org/rubenlg/quaderno)
 
+## Demo
+
+If you want to see this in action, [here is a game prototype built with this toolkit](https://rubenlg.github.io/quaderno/examples/quantum_derail/).
+
 ## Usage
 
 This toolkit allows creating game prototypes using purely declarative syntax. You can create whole prototypes just by drawing images and writing an HTML file, without any Javascript.
