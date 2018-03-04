@@ -219,6 +219,10 @@ If you are planning to send a PR for a feature that you think is cool, I strongl
 
 And finally, this is github, you can just fork the repository if you want to add features that I don't want in the core toolkit.
 
+## Games
+
+Here is a [list of games using quaderno](games.md).
+
 ## License
 
 MIT
