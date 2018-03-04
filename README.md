@@ -36,6 +36,7 @@ This simple example creates an adventure game with two rooms. The player moves f
 In a `region`, you can define what to do when the user clicks on it. In this example, there is an action `goto-room` which tells the game to navigate to another room.
 
 And that's it for the very basics, this is the hello-world example that you can find in the `examples` directory. If you open that example, you will see how to turn this into a working game, with a bunch of stuff in the `<head>` of the HTML file.
+You can see the example live [here](https://rubenlg.github.io/quaderno/examples/hello_world/)
 
 ### Inventory
 
@@ -72,7 +73,7 @@ You can also manipulate the inventory by using the inventory actions:
 *  `inventory-add` adds one ore more items to the inventory.
 *  `inventory-del` removes one ore more items from the inventory.
 
-You can see a small example using the inventory in the examples directory.
+You can see a small example using the inventory [here](https://rubenlg.github.io/quaderno/examples/inventory/).
 
 ### Conversations
 
@@ -114,7 +115,7 @@ The `show-conv` action has to define two elements: the ID of the `<conv-group>` 
 
 If you want a conversation to show right away when entering a room, you can set the attribute `default` on one of its `<conv>` nodes.
 
-There is a small example of conversations in the examples directory.
+There is a small example of conversations [here](https://rubenlg.github.io/quaderno/examples/conversation/).
 
 ### Room states
 
@@ -142,7 +143,7 @@ However, the state is remembered when you leave the room. Now, if some other roo
 
 Sometimes it's necessary to change some room state remotely, i.e. without navigating to it. Think for example of a character using a lever in one room that opens a door in another room. That can be done with the action `remote-room-state`. You use it similarly to `goto-room`, except that the player stays in the current room.
 
-There is an example of room states in the examples directory.
+There is an example of room states [here](https://rubenlg.github.io/quaderno/examples/room_states/).
 
 ### Saying things
 
@@ -152,7 +153,7 @@ Sometimes you just want to pretend that the player is saying something, for exam
   <region coords="0, 0, 300, 448" say="This is a window"></region>
 ```
 
-Note that there is no support for running actions in sequence. If you want to wait until the player dismisses a thing being said before executing another action, then you are better off using a conversation without prompt and a `<conv default>`. The Quantum Derail prototype in the examples directory does that in a few places.
+Note that there is no support for running actions in sequence. If you want to wait until the player dismisses a thing being said before executing another action, then you are better off using a conversation without prompt and a `<conv default>`. The Quantum Derail [prototype](https://rubenlg.github.io/quaderno/examples/quantum_derail) in the examples directory does that in a few places.
 
 ### Debug mode
 
