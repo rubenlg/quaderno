@@ -191,18 +191,18 @@ Remember to inform your users about cookies and stuff if you do that.
 
 If you are making a prototype, perhaps this is the least important thing to consider. However, since you define the game with HTML tags, you can use CSS to change how they look and feel. The toolkit provides default CSS that just works. Feel free to override it with your own rules.
 
-## Using the examples
+## Modifying the library
 
-First you need to build the javascript library, with the following commands:
+If you change any of the Typescript code, you need to rebuild the javascript library, with the following commands:
 
 ```sh
 npm install
 npm run build
 ```
 
-The first command will install all the required dependencies, and the second one builds the javascript library.
+The first command will install all the required dependencies (you only run this the first time), and the second one builds the javascript library.
 
-And now you can open the `index.html` file of any of the examples directly in your browser.
+And now you can open the `index.html` file of any of the examples directly in your browser and see the impact of your changes.
 
 ## Feature requests / PRs
 
