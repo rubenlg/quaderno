@@ -8,12 +8,7 @@ function bootstrap() {
   }
   const gameElement = document.querySelector('game');
   try {
-    const game = gameElement && new Game(gameElement as HTMLElement);
-    if (game) {
-      window.addEventListener('popstate', () => {
-        alert('Back button not supported');
-      });
-    }
+    new Game(gameElement as HTMLElement);
   } catch (e) {
     debug(e.message, 'ERROR');
   }

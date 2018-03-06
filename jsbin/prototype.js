@@ -363,17 +363,24 @@ class Game {
         for (const room of this.rooms.values()) {
             room.parseActions(this);
         }
-        const firstRoomRef = this.getValidatedRoomStateRef(utils_1.getAttribute(gameElement, 'first-room'), 'attribute first-room of game');
         const width = gameElement.getAttribute('width');
         const height = gameElement.getAttribute('height');
         if (width && height) {
             gameElement.style.width = `${width}px`;
             gameElement.style.height = `${height}px`;
         }
-        this.currentRoomId = firstRoomRef.id;
-        this.getCurrentRoom().setState(firstRoomRef.state || '');
+        if (location.hash) {
+            this.currentRoomId = this.applyUrlState(location.hash.slice(1)); // Drop '#'
+        }
+        else {
+            const firstRoomRef = this.getValidatedRoomStateRef(utils_1.getAttribute(gameElement, 'first-room'), 'attribute first-room of game');
+            this.currentRoomId = firstRoomRef.id;
+            this.getCurrentRoom().setState(firstRoomRef.state || '');
+        }
         this.getCurrentRoom().enter();
         this.playerPrompt.attach(gameElement);
+        // Event listeners must be installed *after* recovering the state from the hash.
+        this.installStateChangeListeners();
     }
     /**
      * Parses a RoomStateRef, throwing an error if it fails.
@@ -404,7 +411,7 @@ class Game {
         if (debug_1.debugEnabled()) {
             debug_1.debug(`Current room: "${this.currentRoomId}"`);
         }
-        window.history.pushState({ roomId, state }, '', './#' + roomId);
+        this.onStateChanged();
         this.maybeLogVisit(roomId);
     }
     /** Pretend the player is saying something. */
@@ -413,6 +420,69 @@ class Game {
     }
     getCurrentRoom() {
         return this.getRoom(this.currentRoomId);
+    }
+    onStateChanged() {
+        window.location.hash = '#' + this.encodeUrlState();
+    }
+    /** Encodes the current state of the game as a URL hash. */
+    encodeUrlState() {
+        const currentRoomId = encodeURIComponent(this.currentRoomId);
+        const inventoryState = this.inventory ? this.inventory.encodeUrlState() : '';
+        const currentRoomStates = this.getRoomsUrlStates();
+        return `cr=${currentRoomId}&i=${inventoryState}&rs=${currentRoomStates}`;
+    }
+    applyUrlState(state) {
+        let currentRoomId;
+        const pieces = state.split('&').map(piece => piece.split('='));
+        for (const [k, v] of pieces) {
+            switch (k) {
+                case 'cr':
+                    currentRoomId = decodeURIComponent(v);
+                    break;
+                case 'i':
+                    if (this.inventory) {
+                        this.inventory.applyUrlState(v);
+                    }
+                    break;
+                case 'rs':
+                    this.applyRoomUrlStates(v);
+                    break;
+                default:
+                    throw Error(`Invalid URL state ${state}`);
+            }
+        }
+        if (currentRoomId === undefined || !this.rooms.has(currentRoomId)) {
+            throw Error('Invalid current room ID');
+        }
+        else {
+            return currentRoomId;
+        }
+    }
+    getRoomsUrlStates() {
+        const nonDefaultStates = [];
+        for (const [name, room] of this.rooms) {
+            const encodedName = encodeURIComponent(name);
+            const encodedState = room.encodeUrlState();
+            if (encodedState) {
+                nonDefaultStates.push(`${encodedName}:${encodedState}`);
+            }
+        }
+        return nonDefaultStates.join(',');
+    }
+    applyRoomUrlStates(state) {
+        const parts = state.split(',').filter(p => !!p).map(part => part.split(':'));
+        for (const [name, roomState] of parts) {
+            const decodedName = decodeURIComponent(name);
+            this.getRoom(decodedName).applyUrlState(roomState);
+        }
+    }
+    installStateChangeListeners() {
+        if (this.inventory) {
+            this.inventory.stateChangeListeners.push(() => this.onStateChanged());
+        }
+        for (const room of this.rooms.values()) {
+            room.stateChangeListeners.push(() => this.onStateChanged());
+        }
     }
     getOrCreateRoom(id) {
         const existing = this.rooms.get(id);
@@ -492,6 +562,7 @@ const utils_1 = require("./utils");
 class Inventory {
     constructor(element) {
         this.items = new Map();
+        this.stateChangeListeners = [];
         const images = element.querySelectorAll('img');
         for (const image of images) {
             this.items.set(utils_1.assert(image.id, 'All inventory images must have IDs'), image);
@@ -516,10 +587,33 @@ class Inventory {
         for (const id of ids) {
             this.getItem(id).classList.add('enabled');
         }
+        this.onStateChange();
     }
     disable(...ids) {
         for (const id of ids) {
             this.getItem(id).classList.remove('enabled');
+        }
+        this.onStateChange();
+    }
+    encodeUrlState() {
+        return Array.from(this.items.keys())
+            .filter(id => this.enabled(id))
+            .map(encodeURIComponent).join(',');
+    }
+    applyUrlState(state) {
+        const enabled = new Set(state.split(',').map(decodeURIComponent));
+        for (const id of this.items.keys()) {
+            if (enabled.has(id)) {
+                this.enable(id);
+            }
+            else {
+                this.disable(id);
+            }
+        }
+    }
+    onStateChange() {
+        for (const listener of this.stateChangeListeners) {
+            listener();
         }
     }
     getItem(id) {
@@ -550,12 +644,7 @@ function bootstrap() {
     }
     const gameElement = document.querySelector('game');
     try {
-        const game = gameElement && new game_1.Game(gameElement);
-        if (game) {
-            window.addEventListener('popstate', () => {
-                alert('Back button not supported');
-            });
-        }
+        new game_1.Game(gameElement);
     }
     catch (e) {
         debug_1.debug(e.message, 'ERROR');
@@ -577,6 +666,7 @@ class Room {
         this.id = id;
         this.states = new Map();
         this.currentStateId = '';
+        this.stateChangeListeners = [];
     }
     addState(id, state) {
         this.states.set(id, state);
@@ -585,20 +675,25 @@ class Room {
         utils_1.assert(this.hasState(state), `Unknown state "${state}"`);
         debug_1.debug(`Room ${this.id} is now in state "${state}"`);
         this.currentStateId = state;
+        this.onStateChange();
+    }
+    getState(id) {
+        utils_1.assert(this.hasState(id), `Unknown state "${id}"`);
+        return this.states.get(id);
     }
     hasState(state) {
         return this.states.has(state);
     }
-    currentState() {
+    getCurrentState() {
         return utils_1.assert(this.states.get(this.currentStateId));
     }
     /** Leaves this room, hiding it and resetting variables. */
     leave() {
-        this.currentState().leave();
+        this.getCurrentState().leave();
     }
     /** Enters the room, showing it and initializing varibles. */
     enter() {
-        this.currentState().enter();
+        this.getCurrentState().enter();
     }
     /**
      * Actions have to be parsed *after* constructing the whole game tree, because
@@ -608,6 +703,23 @@ class Room {
     parseActions(game) {
         for (const state of this.states.values()) {
             state.parseActions(game, this);
+        }
+    }
+    encodeUrlState() {
+        return encodeURIComponent(this.currentStateId);
+    }
+    applyUrlState(state) {
+        const decoded = decodeURIComponent(state);
+        if (this.states.has(decoded)) {
+            this.currentStateId = decoded;
+        }
+        else {
+            throw Error('Unknown state ' + decoded);
+        }
+    }
+    onStateChange() {
+        for (const listener of this.stateChangeListeners) {
+            listener();
         }
     }
 }

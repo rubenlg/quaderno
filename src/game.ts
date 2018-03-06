@@ -36,18 +36,25 @@ export class Game {
       room.parseActions(this);
     }
 
-    const firstRoomRef = this.getValidatedRoomStateRef(getAttribute(
-      gameElement, 'first-room'), 'attribute first-room of game');
     const width = gameElement.getAttribute('width');
     const height = gameElement.getAttribute('height');
     if (width && height) {
       gameElement.style.width = `${width}px`;
       gameElement.style.height = `${height}px`;
     }
-    this.currentRoomId = firstRoomRef.id;
-    this.getCurrentRoom().setState(firstRoomRef.state || '');
+    if (location.hash) {
+      this.currentRoomId = this.applyUrlState(location.hash.slice(1)); // Drop '#'
+    } else {
+      const firstRoomRef = this.getValidatedRoomStateRef(getAttribute(
+        gameElement, 'first-room'), 'attribute first-room of game');
+      this.currentRoomId = firstRoomRef.id;
+      this.getCurrentRoom().setState(firstRoomRef.state || '');
+    }
     this.getCurrentRoom().enter();
     this.playerPrompt.attach(gameElement);
+
+    // Event listeners must be installed *after* recovering the state from the hash.
+    this.installStateChangeListeners();
   }
 
   /**
@@ -83,10 +90,7 @@ export class Game {
     if (debugEnabled()) {
       debug(`Current room: "${this.currentRoomId}"`);
     }
-    window.history.pushState(
-      { roomId, state },
-      '',
-      './#' + roomId);
+    this.onStateChanged();
     this.maybeLogVisit(roomId);
   }
 
@@ -97,6 +101,74 @@ export class Game {
 
   getCurrentRoom() {
     return this.getRoom(this.currentRoomId);
+  }
+
+  onStateChanged() {
+    window.location.hash = '#' + this.encodeUrlState();
+  }
+
+  /** Encodes the current state of the game as a URL hash. */
+  private encodeUrlState() {
+    const currentRoomId = encodeURIComponent(this.currentRoomId);
+    const inventoryState = this.inventory ? this.inventory.encodeUrlState() : '';
+    const currentRoomStates = this.getRoomsUrlStates();
+    return `cr=${currentRoomId}&i=${inventoryState}&rs=${currentRoomStates}`;
+  }
+
+  private applyUrlState(state: string) {
+    let currentRoomId: string | undefined;
+    const pieces = state.split('&').map(piece => piece.split('='));
+    for (const [k, v] of pieces) {
+      switch (k) {
+        case 'cr':
+          currentRoomId = decodeURIComponent(v);
+          break;
+        case 'i':
+          if (this.inventory) {
+            this.inventory.applyUrlState(v);
+          }
+          break;
+        case 'rs':
+          this.applyRoomUrlStates(v);
+          break;
+        default:
+          throw Error(`Invalid URL state ${state}`);
+      }
+    }
+    if (currentRoomId === undefined || !this.rooms.has(currentRoomId)) {
+      throw Error('Invalid current room ID');
+    } else {
+      return currentRoomId;
+    }
+  }
+
+  private getRoomsUrlStates(): string {
+    const nonDefaultStates: string[] = [];
+    for (const [name, room] of this.rooms) {
+      const encodedName = encodeURIComponent(name);
+      const encodedState = room.encodeUrlState();
+      if (encodedState) {
+        nonDefaultStates.push(`${encodedName}:${encodedState}`);
+      }
+    }
+    return nonDefaultStates.join(',');
+  }
+
+  private applyRoomUrlStates(state: string) {
+    const parts = state.split(',').filter(p => !!p).map(part => part.split(':'));
+    for (const [name, roomState] of parts) {
+      const decodedName = decodeURIComponent(name);
+      this.getRoom(decodedName).applyUrlState(roomState);
+    }
+  }
+
+  private installStateChangeListeners() {
+    if (this.inventory) {
+      this.inventory.stateChangeListeners.push(() => this.onStateChanged());
+    }
+    for (const room of this.rooms.values()) {
+      room.stateChangeListeners.push(() => this.onStateChanged());
+    }
   }
 
   private getOrCreateRoom(id: string): Room {

@@ -9,6 +9,7 @@ import { debug } from "./debug";
 export class Room {
   private readonly states = new Map<string, RoomState>();
   private currentStateId: string = '';
+  readonly stateChangeListeners: Array<() => void> = [];
 
   constructor(private readonly id: string) {}
 
@@ -20,24 +21,30 @@ export class Room {
     assert(this.hasState(state), `Unknown state "${state}"`);
     debug(`Room ${this.id} is now in state "${state}"`);
     this.currentStateId = state;
+    this.onStateChange();
+  }
+
+  getState(id: string): RoomState {
+    assert(this.hasState(id), `Unknown state "${id}"`);
+    return this.states.get(id)!;
   }
 
   hasState(state: string) {
     return this.states.has(state);
   }
 
-  currentState(): RoomState {
+  getCurrentState(): RoomState {
     return assert(this.states.get(this.currentStateId));
   }
 
   /** Leaves this room, hiding it and resetting variables. */
   leave() {
-    this.currentState().leave();
+    this.getCurrentState().leave();
   }
 
   /** Enters the room, showing it and initializing varibles. */
   enter() {
-    this.currentState().enter();
+    this.getCurrentState().enter();
   }
 
   /**
@@ -48,6 +55,25 @@ export class Room {
   parseActions(game: Game) {
     for (const state of this.states.values()) {
       state.parseActions(game, this);
+    }
+  }
+
+  encodeUrlState(): string {
+    return encodeURIComponent(this.currentStateId);
+  }
+
+  applyUrlState(state: string) {
+    const decoded = decodeURIComponent(state);
+    if (this.states.has(decoded)) {
+      this.currentStateId = decoded;
+    } else {
+      throw Error('Unknown state ' + decoded);
+    }
+  }
+
+  private onStateChange() {
+    for (const listener of this.stateChangeListeners) {
+      listener();
     }
   }
 }

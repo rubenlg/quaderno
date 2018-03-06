@@ -17,11 +17,11 @@ describe('Room', () => {
     const room = new Room('my-room');
     room.addState('state1', state1);
     room.addState('state2', state2);
-    expect(() => room.currentState()).toThrowError();
+    expect(() => room.getCurrentState()).toThrowError();
     room.setState('state1');
-    expect(room.currentState()).toBe(state1);
+    expect(room.getCurrentState()).toBe(state1);
     room.setState('state2');
-    expect(room.currentState()).toBe(state2);
+    expect(room.getCurrentState()).toBe(state2);
   });
 
   it('enables and disables states', () => {

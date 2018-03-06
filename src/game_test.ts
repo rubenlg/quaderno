@@ -2,6 +2,10 @@ import { makeDOM } from "./testing";
 import { Game } from "./game";
 
 describe('Game', () => {
+  afterEach(() => {
+    location.hash = '';
+  });
+
   it('parses just rooms', () => {
     const domElement = makeDOM(`
       <game first-room="first">
@@ -54,6 +58,60 @@ describe('Game', () => {
     game.say('Hello');
     expect(domElement.querySelector('player-prompt')!.textContent).toBe('Hello');
     expect(domElement.querySelector('player-prompt')!.classList).toContain('visible');
+  });
+
+});
+
+describe('URL state', () => {
+  afterEach(() => {
+    location.hash = '';
+  });
+
+  it('works for rooms', () => {
+    const domElement = makeDOM(`
+    <game first-room="first">
+      <room id="first"></room>
+      <room id="second"></room>
+    </game>`);
+    const game = new Game(domElement);
+    game.navigate('second');
+    expect(window.location.hash).toBeTruthy();
+    const game2 = new Game(domElement);
+    expect(game2.getCurrentRoom()).toBe(game2.getRoom('second'));
+  });
+
+  it('works for inventory', () => {
+    const domElement = makeDOM(`
+    <game first-room="first">
+      <room id="first"></room>
+      <inventory initial-contents="coin">
+        <img id="coin"></img>
+        <img id="pebble"></img>
+      </inventory>
+    </game>`);
+    const game = new Game(domElement);
+    game.inventory!.enable('pebble');
+
+    expect(window.location.hash).toBeTruthy();
+    const game2 = new Game(domElement);
+    expect(game2.inventory!.enabled('pebble')).toBeTruthy();
+  });
+
+  it('works for room states', () => {
+    const domElement = makeDOM(`
+    <game first-room="first">
+      <room id="first"></room>
+      <room id="second"></room>
+      <room id="second:state1"></room>
+    </game>`);
+    const game = new Game(domElement);
+    game.navigate('second', 'state1');
+    game.navigate('first');
+
+    expect(window.location.hash).toBeTruthy();
+    const game2 = new Game(domElement);
+    expect(game2.getCurrentRoom()).toBe(game2.getRoom('first'));
+    expect(game2.getRoom('second').getCurrentState()).toBe(game2.getRoom('second').getState('state1'));
   });
 });
 

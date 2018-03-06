@@ -6,6 +6,7 @@ import { assert } from "./utils";
 export class Inventory {
   static readonly MIME = "application/inventory";
   readonly items = new Map<string, Element>();
+  readonly stateChangeListeners: Array<() => void> = [];
 
   constructor(element: Element) {
     const images = element.querySelectorAll('img');
@@ -35,11 +36,36 @@ export class Inventory {
     for (const id of ids) {
       this.getItem(id).classList.add('enabled');
     }
+    this.onStateChange();
   }
 
   disable(...ids: string[]) {
     for (const id of ids) {
       this.getItem(id).classList.remove('enabled');
+    }
+    this.onStateChange();
+  }
+
+  encodeUrlState(): string {
+    return Array.from(this.items.keys())
+      .filter(id => this.enabled(id))
+      .map(encodeURIComponent).join(',');
+  }
+
+  applyUrlState(state: string) {
+    const enabled = new Set(state.split(',').map(decodeURIComponent));
+    for (const id of this.items.keys()) {
+      if (enabled.has(id)) {
+        this.enable(id);
+      } else {
+        this.disable(id);
+      }
+    }
+  }
+
+  private onStateChange() {
+    for (const listener of this.stateChangeListeners) {
+      listener();
     }
   }
 

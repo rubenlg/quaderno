@@ -21,6 +21,9 @@ describe('parseActions', () => {
       };
     });
   });
+  afterEach(() => {
+    location.hash = '';
+  });
 
   it('supports no actions', () => {
     const composedAction = parseActions([], { game, room, roomState });
@@ -53,6 +56,9 @@ describe('parseActions', () => {
 });
 
 describe('remote-room-state', () => {
+  afterEach(() => {
+    location.hash = '';
+  });
   it('works on the current room', () => {
     const domElement = makeDOM(`
       <game first-room="room1">
@@ -86,6 +92,9 @@ describe('remote-room-state', () => {
 });
 
 describe('goto-room', () => {
+  afterEach(() => {
+    location.hash = '';
+  });
   it('works on the current room', () => {
     const domElement = makeDOM(`
       <game first-room="room1">
@@ -118,6 +127,9 @@ describe('goto-room', () => {
 });
 
 describe('inventory-add', () => {
+  afterEach(() => {
+    location.hash = '';
+  });
   it('adds an item', () => {
     const domElement = makeDOM(`
       <game first-room="room1">
@@ -152,6 +164,9 @@ describe('inventory-add', () => {
 });
 
 describe('inventory-del', () => {
+  afterEach(() => {
+    location.hash = '';
+  });
   it('does not delete if it is not there', () => {
     const domElement = makeDOM(`
       <game first-room="room1">
@@ -186,6 +201,9 @@ describe('inventory-del', () => {
 });
 
 describe('say', () => {
+  afterEach(() => {
+    location.hash = '';
+  });
   it('does say', () => {
     const domElement = makeDOM(`
       <game first-room="room1">
@@ -204,6 +222,9 @@ describe('say', () => {
 });
 
 describe('show-conv', () => {
+  afterEach(() => {
+    location.hash = '';
+  });
   it('does show a conv', () => {
     const domElement = makeDOM(`
       <game first-room="room1">
@@ -223,6 +244,9 @@ describe('show-conv', () => {
 });
 
 describe('next-conv', () => {
+  afterEach(() => {
+    location.hash = '';
+  });
   it('does show a conv', () => {
     const domElement = makeDOM(`
       <game first-room="room1">
