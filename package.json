@@ -23,5 +23,8 @@
     "karma-typescript": "^3.0.12",
     "tsify": "^3.0.4",
     "typescript": "^2.7.2"
+  },
+  "dependencies": {
+    "mobile-drag-drop": "^2.3.0-rc.0"
   }
 }

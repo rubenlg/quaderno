@@ -75,6 +75,7 @@ export class Inventory {
 }
 
 function configureDragAndDrop(image: HTMLImageElement) {
+  image.draggable = true; // needed just for the mobile polyfill.
   image.addEventListener('dragstart', event => {
     const target = event.target;
     if (target && target instanceof Element) {
