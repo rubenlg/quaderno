@@ -10,7 +10,7 @@ This toolkit allows creating game prototypes using purely declarative syntax. Yo
 
 Here is a simple example:
 
-```html
+```xml
 <html>
 <head>
   <link rel="stylesheet" href="https://rubenlg.github.io/quaderno/src/style.css">
@@ -52,7 +52,7 @@ You can see the example live [here](https://rubenlg.github.io/quaderno/examples/
 
 The inventory is the set of objects owned by the player so far. It is optional, and is defined inside the `<game>` tag. Here is one example:
 
-```html
+```xml
   <game first-room="...">
 
     ...
@@ -70,7 +70,7 @@ When the game starts, it reads the `initial-contents` property in the `<inventor
 
 Inventory items can be used by dragging them over regions on each room. In order to define what to do when the user drags an inventory item over a region, you can use the `<give>` tag. For example:
 
-```html
+```xml
   <region coords="115,144,339,339" tooltip="Drag here a star!">
     <give id="star" goto-room="room2"></give>
   </region>
@@ -95,7 +95,7 @@ Then, you define a set of `<conv>` nodes each representing the character maybe s
 
 Here is an example:
 
-```html
+```xml
   <conv-group id="character1">
     <prompt style="left: 250; top: 150"></prompt>
     <conv id="start" prompt="Hi there!">
@@ -117,7 +117,7 @@ When the player clicks one of the replies, the actions defined inside the reply 
 
 Same as with rooms, there is no implicit order in a conversation. Conversations are invisible by default, and an action has to explicitly activate them. That is done with the `show-conv` action. For example:
 
-```html
+```xml
   <region coords="133,107,310,410" show-conv="character1.start" tooltip="Left person"></region>
 ```
 
@@ -135,7 +135,7 @@ To solve this problem, rooms can have several states. On each state of course yo
 
 Here is one example:
 
-```html
+```xml
   <room id="start:white">
     <img src="intro.png"></img>
     <region coords="80,431,301,519" goto-room="start:blue" tooltip="Changes the state of this room"></region>
@@ -159,7 +159,7 @@ There is an example of room states [here](https://rubenlg.github.io/quaderno/exa
 
 Sometimes you just want to pretend that the player is saying something, for example, when clicking on a region to inspect it. That can be simulated with a conversation, but there is direct support for that too. You can use the `say` action. For example:
 
-```html
+```xml
   <region coords="0, 0, 300, 448" say="This is a window"></region>
 ```
 
