@@ -43,7 +43,7 @@ function parseAction(attribute: Attr, context: ActionContext): Action {
     assert(parser, `Unknown action: ${attribute.name}`);
     return parser(attribute.value, context);
   } catch (e) {
-    throw Error(`${e.message} in ${renderNodePath(attribute.ownerElement)}`);
+    throw Error(`${e.message} in ${renderNodePath(attribute.ownerElement!)}`);
   }
 }
 
