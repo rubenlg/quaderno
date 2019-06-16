@@ -79,8 +79,10 @@ function configureDragAndDrop(image: HTMLImageElement) {
   image.addEventListener('dragstart', event => {
     const target = event.target;
     if (target && target instanceof Element) {
-      event.dataTransfer.setData(Inventory.MIME, target.id);
-      event.dataTransfer.effectAllowed = "move";
+      if (event.dataTransfer) {
+        event.dataTransfer.setData(Inventory.MIME, target.id);
+        event.dataTransfer.effectAllowed = "move";
+      }
     }
   }, false);
 }

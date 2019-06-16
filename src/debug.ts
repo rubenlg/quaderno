@@ -58,7 +58,9 @@ export function makeHandle(klass: string, target: Point, onRelease: () => void):
     startY = event.clientY;
     targetStartX = target.x;
     targetStartY = target.y;
-    event.dataTransfer.setData('application/handle', 'handle');
+    if (event.dataTransfer) {
+      event.dataTransfer.setData('application/handle', 'handle');
+    }
   });
   handle.addEventListener('drag', e => {
     // Workaround for bogus last drag event from Chrome.

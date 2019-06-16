@@ -137,7 +137,7 @@ function setupGiveDragAndDrop(
   defaultAction: Action) {
 
   region.addEventListener('dragenter', event => {
-    if (hasType(event.dataTransfer, Inventory.MIME)) {
+    if (event.dataTransfer && hasType(event.dataTransfer, Inventory.MIME)) {
       event.preventDefault();
       const target = event.target;
       if (target && target instanceof Element) {
@@ -146,7 +146,7 @@ function setupGiveDragAndDrop(
     }
   }, false);
   region.addEventListener('dragover', event => {
-    if (hasType(event.dataTransfer, Inventory.MIME)) {
+    if (event.dataTransfer && hasType(event.dataTransfer, Inventory.MIME)) {
       event.preventDefault();
     }
   }, false);
@@ -157,6 +157,9 @@ function setupGiveDragAndDrop(
     }
   }, false);
   region.addEventListener('drop', event => {
+    if (!event.dataTransfer) {
+      return;
+    }
     const target = event.target as Element;
     if (target) {
       target.classList.remove('inventory-drag');
